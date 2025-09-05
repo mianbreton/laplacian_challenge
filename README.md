@@ -22,21 +22,26 @@ Currently, we implemented:
 
 ### Laplacian Equation
 
-The Laplacian operator, denoted as \( \nabla^2 \) or \( \Delta \), is defined as the sum of second partial derivatives: 
+The Laplacian operator is defined as the sum of second partial derivatives
 
-\[ \nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2} + \frac{\partial^2 f}{\partial z^2} \] 
+<p align="center">
+<img src="img/laplacian_theory.png" alt="Laplacian equation" width="250"/>
+</p>
 
-For a scalar function \( f(x, y, z) \) in 3D space, the Laplacian describes how the value of \( f \) at a point compares to its average over an infinitesimal surrounding region. 
 
-### Discretized Form (Finite Difference) 
+#### Discretized Form (Finite Difference) 
 
-In 1D, using a grid spacing \( h \): 
+In 1D, using a grid spacing h: 
 
-\[ \frac{\partial^2 f}{\partial x^2} \approx \frac{f_{i+1} - 2 f_i + f_{i-1}}{h^2} \] 
+<p align="center">
+<img src="img/laplacian_discrete_1d.png" alt="Laplacian equation 1d" width="250"/>
+</p>
 
 In 3D, for a regular cubic grid: 
 
-\[ \nabla^2 f_{i,j,k} \approx \frac{f_{i+1,j,k} + f_{i-1,j,k} + f_{i,j+1,k} + f_{i,j-1,k} + f_{i,j,k+1} + f_{i,j,k-1} - 6 f_{i,j,k}}{h^2}\]
+<p align="center">
+<img src="img/laplacian_discrete_3d.png" alt="Laplacian equation 1d" width=600"/>
+</p>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -55,13 +60,13 @@ The C++ and Python tests are independent.
 ### C++
 
 ```sh
-# Build CPU executables for native and Kokkos_CPU
+# Build native and Kokkos CPU executables
 cd src/cpp/
 mkdir build_openmp; cd build_openmp
 cmake .. -DKokkos_ENABLE_OPENMP=ON
 make -j $NCPU
 
-# Build GPU executables with CUDA
+# Build Kokkos GPU executables with CUDA
 cd src/cpp/
 mkdir build_cuda; cd build_cuda
 cmake .. -DKokkos_ENABLE_OPENMP=ON -DKokkos_ENABLE_CUDA=ON
@@ -77,7 +82,6 @@ DKokkos_ENABLE_SYCL
 ```
 
 And even `DKokkos_ENABLE_SERIAL` if OpenMP is not found. 
-#### Build GPU executables
 
 ### Python
 
