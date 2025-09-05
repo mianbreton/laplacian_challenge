@@ -25,7 +25,7 @@ Currently, we implemented:
 The Laplacian operator is defined as the sum of second partial derivatives
 
 <p align="center">
-<img src="img/laplacian_theory.png" alt="Laplacian equation" width="250"/>
+<img src="img/laplacian_theory.png" alt="Laplacian equation" width="250" style="background:white; padding:10px;"/>
 </p>
 
 
@@ -34,13 +34,13 @@ The Laplacian operator is defined as the sum of second partial derivatives
 In 1D, using a grid spacing h: 
 
 <p align="center">
-<img src="img/laplacian_discrete_1d.png" alt="Laplacian equation 1d" width="250"/>
+<img src="img/laplacian_discrete_1d.png" alt="Laplacian equation 1d" width="250" style="background:white; padding:10px;"/>
 </p>
 
 In 3D, for a regular cubic grid: 
 
 <p align="center">
-<img src="img/laplacian_discrete_3d.png" alt="Laplacian equation 1d" width=600"/>
+<img src="img/laplacian_discrete_3d.png" alt="Laplacian equation 1d" width="600" style="background:white; padding:10px;"/>
 </p>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
