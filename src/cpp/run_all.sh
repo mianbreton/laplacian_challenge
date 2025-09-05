@@ -16,8 +16,7 @@ LOG_FILE="run_all_results_with_threads.log"
 > "$LOG_FILE"
 
 # Thread counts to test (adjust to match your machine's CPU count)
-#NCPUs=(1 2 4 8 16)
-NCPUs=(4 8)
+NCPUs=(1 2 4 8 16)
 
 # Loop over each thread count
 for threads in "${NCPUs[@]}"; do
