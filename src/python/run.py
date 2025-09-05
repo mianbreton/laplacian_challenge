@@ -91,16 +91,30 @@ def timing(kernel: Kernel, N, runs, NCPU):
 
 if __name__ == "__main__":
     NCPUs = [1, 2, 4, 8, 16]
-    N_list = [32, 64, 128, 256, 512]
+    N_list = [32, 64, 128, 256]
     runs = 10
+
+    # CPU runs
     for NCPU in NCPUs:
         ti.init(arch=ti.cpu, cpu_max_num_threads=NCPU)
         numba.set_num_threads(NCPU)
+        print(f"CPU runs with {NCPU} threads")
         for N in N_list:
             print("")
             print(f"cells along one direction: {N:{'-'}<{50}}")
             print("")
             for k in Kernel:
+                timing(k, N, runs, NCPU)
+    # GPU runs
+    ti.init(arch=ti.gpu)
+    print("")
+    print("GPU runs")
+    for N in N_list:
+        print("")
+        print(f"cells along one direction: {N:{'-'}<{50}}")
+        print("")
+        for k in Kernel:
+            if "TAICHI" in k.name:
                 timing(k, N, runs, NCPU)
 
 

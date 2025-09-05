@@ -16,7 +16,7 @@ if(DEFINED DEBUG AND DEBUG)
 endif()
 # Optimization levels and flags
 #set(OPT_LEVELS O1 O2 O3)
-set(OPT_LEVELS O2 O3)
+set(OPT_LEVELS O3)
 set(EXTRA_FLAGS none fastmath unroll vectorize fastmath_unroll_vec)
 
 # Map flags to actual compiler options

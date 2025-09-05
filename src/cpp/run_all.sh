@@ -33,7 +33,7 @@ for threads in "${NCPUs[@]}"; do
                     echo "------------- Running $exe -------------"
                     echo "" >> "$LOG_FILE"
                     echo "------------- Running $exe -------------" >> "$LOG_FILE"
-                    $exe $script_dir/timings/${dir}_BIND_${proc_bind}_NCPUs_${threads} >> $LOG_FILE
+                    $exe $script_dir/timings/runtime_BIND_${proc_bind}_NCPUs_${threads} >> $LOG_FILE
                 fi
             done
         done

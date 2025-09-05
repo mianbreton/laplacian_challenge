@@ -56,11 +56,10 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
     std::string output = get_executable_name(argv[0]);
-    output.erase(0,4); 
+    output.erase(0,10); 
 
     Kokkos::initialize(argc, argv);
     {
-        //constexpr std::array<size_t, 5> N_array = {32, 64, 128, 256, 512};
         constexpr std::array<size_t, 4> N_array = {32, 64, 128, 256};
         for (size_t N : N_array)
         {

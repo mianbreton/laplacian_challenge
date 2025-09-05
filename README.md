@@ -83,6 +83,8 @@ DKokkos_ENABLE_SYCL
 
 And even `DKokkos_ENABLE_SERIAL` if OpenMP is not found. 
 
+Additionally, you can add the flag `-DDEBUG=ON` to enable `-g` during compilation.
+
 ### Python
 
 We can install Numba with
