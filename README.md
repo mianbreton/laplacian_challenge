@@ -22,30 +22,24 @@ Currently, we implemented:
 
 ### Laplacian Equation
 
-The Laplacian operator, denoted as \( \nabla^2 \) or \( \Delta \), is defined as the sum of second partial derivatives:
+The Laplacian operator, denoted as ∇² or Δ, is defined as the sum of second partial derivatives:
 
-\[
-\nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2} + \frac{\partial^2 f}{\partial z^2}
-\]
+\[∇²f = ∂²f/∂x² + ∂²f/∂y² + ∂²f/∂z\]
 
-For a scalar function \( f(x, y, z) \) in 3D space, the Laplacian describes how the value of \( f \) at a point compares to its average over an infinitesimal surrounding region.
+For a scalar function f(x, y, z) in 3D space, the Laplacian describes how the value of f at a point compares to its average over an infinitesimal surrounding region.
 
-### Discretized Form (Finite Difference)
+## Discretized Form (Finite Difference)
 
-In 1D, using a grid spacing \( h \):
+In 1D, using a grid spacing h:
 
-\[
-\frac{\partial^2 f}{\partial x^2} \approx \frac{f_{i+1} - 2 f_i + f_{i-1}}{h^2}
-\]
+\[∂²f/∂x² ≈ (f_{i+1} - 2 f_i + f_{i-1}) / h²\]
 
 In 3D, for a regular cubic grid:
 
-\[
-\nabla^2 f_{i,j,k} \approx 
-\frac{f_{i+1,j,k} - 2 f_{i,j,k} + f_{i-1,j,k}}{h^2} \\ +
-\frac{f_{i,j+1,k} - 2 f_{i,j,k} + f_{i,j-1,k}}{h^2} \\ +
-\frac{f_{i,j,k+1} - 2 f_{i,j,k} + f_{i,j,k-1}}{h^2}
-\]
+\[∇²f_{i,j,k} ≈ 
+    (f_{i+1,j,k} - 2 f_{i,j,k} + f_{i-1,j,k}) / h²  
+    + (f_{i,j+1,k} - 2 f_{i,j,k} + f_{i,j-1,k}) / h² \\
+    + (f_{i,j,k+1} - 2 f_{i,j,k} + f_{i,j,k-1}) / h²\]
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
