@@ -86,18 +86,10 @@ And even `DKokkos_ENABLE_SERIAL` if OpenMP is not found.
 Additionally, you can add the flag `-DDEBUG=ON` to enable `-g` during compilation.
 
 ### Python
-
-We can install Numba with
-
+To install all the dependencies
 ```sh
-python -m pip install numba
-python -m pip install icc-rt # Optional
-```
-
-and Taichi with 
-
-```sh
-python -m pip install taichi
+cd src/python
+python -m pip install -e .
 ```
 
 > :warning: Currently, it seems that Taichi does not support Python 3.11 and above

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+name = "lapalcian_challenge"
+version = "0.0.1"
+authors = [
+    { name = "Michel-Andrès Breton", email = "michel-andres.breton@obspm.fr" },
+]
+description = "Various implementations of the 3D Laplacian equation for CPU and GPU"
+readme = "../../README.md"
+requires-python = "<3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy",
+    "numba",
+    "taichi",
+    "rich",
+    "icc-rt", # Optional
+]
+
+[project.urls]
+Homepage = "https://github.com/mianbreton/laplacian_challenge/"
