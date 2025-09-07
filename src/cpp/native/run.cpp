@@ -12,10 +12,6 @@
 #include "laplacian.h"
 
     
-// Compile with:
-/*
-    g++ -O3 -Wall -Wextra -Wpedantic -ffast-math -funroll-all-loops -ftree-vectorize -march=native -fopenmp run.cpp -o run
-*/
 
 std::string get_executable_name(const char* argv0) 
 {

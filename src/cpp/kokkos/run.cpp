@@ -6,11 +6,6 @@
 
 #include "laplacian.h"
 
-/*
- g++ -O3 -std=c++17 -Wall -Wextra -Wpedantic -ffast-math -funroll-all-loops -ftree-vectorize -march=native run.cpp -I/local/home/mb280636/Laplacian_Challenge/cpp/kokkos/external/kokkos/include \
- -L/local/home/mb280636/Laplacian_Challenge/cpp/kokkos/external/kokkos/lib \
- -lkokkoscore -lkokkosalgorithms -lkokkoscontainers -lkokkossimd -ldl -pthread -fopenmp -o run
-*/
 
 std::string get_executable_name(const char* argv0) {
     std::string full_path(argv0);
