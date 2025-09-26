@@ -28,8 +28,8 @@ class Native {
     static void interior_3d_flat_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N);
     static void interior_3d_nested (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N);
     static void interior_3d_nested_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N);
-    static void run_interior_3d_nested_constexpr (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N);
-    static void run_interior_3d_nested_constexpr_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N);
+    static void interior_3d_nested_constexpr (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N);
+    static void interior_3d_nested_constexpr_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N);
     template <size_t N> static void interior_3d_nested_constexpr (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x);
     template <size_t N> static void interior_3d_nested_constexpr_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x);
     static void interior_1d_flat(std::vector<float>& out, const std::vector<float>& x, size_t N);
@@ -48,14 +48,14 @@ class Native {
     static void interior_1d_malloc_nested_i32_max64_idx64_simd(float* out, const float* x, size_t N);
     static void interior_1d_malloc_nested_i32_max64_idx32(float* out, const float* x, size_t N);
     static void interior_1d_malloc_nested_i32_max64_idx32_simd(float* out, const float* x, size_t N);
-    static void run_interior_1d_malloc_nested_constexpr(float* out, const float* x, size_t N);
-    static void run_interior_1d_malloc_nested_constexpr_simd(float* out, const float* x, size_t N);
+    static void interior_1d_malloc_nested_constexpr(float* out, const float* x, size_t N);
+    static void interior_1d_malloc_nested_constexpr_simd(float* out, const float* x, size_t N);
     template <size_t N> static void interior_1d_malloc_nested_constexpr(float* out, const float* x);
     template <size_t N> static void interior_1d_malloc_nested_constexpr_simd(float* out, const float* x);
     static void interior_1d_aligned_nested(float* out, const float* x, size_t N);
 };
 
-void Native::run_interior_1d_malloc_nested_constexpr(float* out, const float* x, const size_t N) 
+void Native::interior_1d_malloc_nested_constexpr(float* out, const float* x, const size_t N) 
 {
     switch (N)
     {
@@ -84,7 +84,7 @@ void Native::run_interior_1d_malloc_nested_constexpr(float* out, const float* x,
             break;
     }
 }
-void Native::run_interior_1d_malloc_nested_constexpr_simd(float* out, const float* x, const size_t N) 
+void Native::interior_1d_malloc_nested_constexpr_simd(float* out, const float* x, const size_t N) 
 {
     switch (N)
     {
@@ -114,7 +114,7 @@ void Native::run_interior_1d_malloc_nested_constexpr_simd(float* out, const floa
     }
 }
 
-void Native::run_interior_3d_nested_constexpr(std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N) 
+void Native::interior_3d_nested_constexpr(std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N) 
 {
     switch (N)
     {
@@ -140,7 +140,7 @@ void Native::run_interior_3d_nested_constexpr(std::vector<std::vector<std::vecto
             break;
     }
 }
-void Native::run_interior_3d_nested_constexpr_simd(std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N) 
+void Native::interior_3d_nested_constexpr_simd(std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N) 
 {
     switch (N)
     {

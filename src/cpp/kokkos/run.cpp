@@ -6,6 +6,8 @@
 
 #include "laplacian.h"
 
+#define BENCHMARK(func, output_base, ...) \
+    benchmark(strip_namespace(#func), output_base, [&]() { func(__VA_ARGS__); })
 
 std::string get_executable_name(const char* argv0) {
     std::string full_path(argv0);
@@ -14,6 +16,11 @@ std::string get_executable_name(const char* argv0) {
         return full_path; // no path separators found, argv0 is already a filename
     else
         return full_path.substr(pos + 1);
+}
+
+std::string strip_namespace(const std::string& full_name) {
+    size_t pos = full_name.rfind("::");
+    return (pos == std::string::npos) ? full_name : full_name.substr(pos + 2);
 }
 
 template <typename Func>
@@ -66,49 +73,49 @@ int main(int argc, char* argv[]) {
                 Laplacians::initialise_1d(x_1d, N);
                 Laplacians::initialise_1d_zero(out_1d, N);
 
-                benchmark("interior_1d_flat", output_base, [&](){Laplacians::interior_1d_flat(out_1d, x_1d, N);});
+                BENCHMARK(Laplacians::interior_1d_flat, output_base, out_1d, x_1d, N);
                 if (N == 32) Laplacians::check_interior(out_1d, N);
-                benchmark("interior_1d_mdrange", output_base, [&](){Laplacians::interior_1d_mdrange(out_1d, x_1d, N);});
+                BENCHMARK(Laplacians::interior_1d_mdrange, output_base, out_1d, x_1d, N);
                 if (N == 32) Laplacians::check_interior(out_1d, N);
-                benchmark("interior_1d_mdrange_i32_idx32", output_base, [&](){Laplacians::interior_1d_mdrange_i32_idx32(out_1d, x_1d, N);});
+                BENCHMARK(Laplacians::interior_1d_mdrange_i32_idx32, output_base, out_1d, x_1d, N);
                 if (N == 32) Laplacians::check_interior(out_1d, N);
-                benchmark("interior_1d_mdrange_i32_idx64", output_base, [&](){Laplacians::interior_1d_mdrange_i32_idx64(out_1d, x_1d, N);});
+                BENCHMARK(Laplacians::interior_1d_mdrange_i32_idx64, output_base, out_1d, x_1d, N);
                 if (N == 32) Laplacians::check_interior(out_1d, N);
-                benchmark("interior_1d_mdrange_i32_idx64promotion", output_base, [&](){Laplacians::interior_1d_mdrange_i32_idx64promotion(out_1d, x_1d, N);});
+                BENCHMARK(Laplacians::interior_1d_mdrange_i32_idx64promotion, output_base, out_1d, x_1d, N);
                 if (N == 32) Laplacians::check_interior(out_1d, N);
-                benchmark("interior_1d_mdrange_i64_idx32", output_base, [&](){Laplacians::interior_1d_mdrange_i64_idx32(out_1d, x_1d, N);});
+                BENCHMARK(Laplacians::interior_1d_mdrange_i64_idx32, output_base, out_1d, x_1d, N);
                 if (N == 32) Laplacians::check_interior(out_1d, N);
-                benchmark("modulo_1d_flat", output_base, [&](){Laplacians::modulo_1d_flat(out_1d, x_1d, N);});
+                BENCHMARK(Laplacians::modulo_1d_flat, output_base, out_1d, x_1d, N);
                 if (N == 32)
                 {   
                     Laplacians::check_interior(out_1d, N); 
                     Laplacians::check_exterior(out_1d, N);
                 }
-                benchmark("modulo_1d_mdrange", output_base, [&](){Laplacians::modulo_1d_mdrange(out_1d, x_1d, N);});
+                BENCHMARK(Laplacians::modulo_1d_mdrange, output_base, out_1d, x_1d, N);
                 if (N == 32)
                 {   
                     Laplacians::check_interior(out_1d, N); 
                     Laplacians::check_exterior(out_1d, N);
                 }
-                benchmark("conditional_add_1d_flat", output_base, [&](){Laplacians::conditional_add_1d_flat(out_1d, x_1d, N);});
+                BENCHMARK(Laplacians::conditional_add_1d_flat, output_base, out_1d, x_1d, N);
                 if (N == 32)
                 {   
                     Laplacians::check_interior(out_1d, N); 
                     Laplacians::check_exterior(out_1d, N);
                 }
-                benchmark("conditional_add_1d_mdrange", output_base, [&](){Laplacians::conditional_add_1d_mdrange(out_1d, x_1d, N);});
+                BENCHMARK(Laplacians::conditional_add_1d_mdrange, output_base, out_1d, x_1d, N);
                 if (N == 32)
                 {   
                     Laplacians::check_interior(out_1d, N); 
                     Laplacians::check_exterior(out_1d, N);
                 }
-                benchmark("ternary_1d_flat", output_base, [&](){Laplacians::ternary_1d_flat(out_1d, x_1d, N);});
+                BENCHMARK(Laplacians::ternary_1d_flat, output_base, out_1d, x_1d, N);
                 if (N == 32)
                 {   
                     Laplacians::check_interior(out_1d, N); 
                     Laplacians::check_exterior(out_1d, N);
                 }
-                benchmark("ternary_1d_mdrange", output_base, [&](){Laplacians::ternary_1d_mdrange(out_1d, x_1d, N);});
+                BENCHMARK(Laplacians::ternary_1d_mdrange, output_base, out_1d, x_1d, N);
                 if (N == 32)
                 {   
                     Laplacians::check_interior(out_1d, N); 
@@ -121,41 +128,41 @@ int main(int argc, char* argv[]) {
                 Laplacians::initialise_3d(x_3d, N);
                 Laplacians::initialise_3d_zero(out_3d, N);
 
-                benchmark("interior_3d_flat", output_base, [&](){Laplacians::interior_3d_flat(out_3d, x_3d, N);});
+                BENCHMARK(Laplacians::interior_3d_flat, output_base, out_3d, x_3d, N);
                 if (N == 32) Laplacians::check_interior(out_3d, N);
-                benchmark("interior_3d_mdrange", output_base, [&](){Laplacians::interior_3d_mdrange(out_3d, x_3d, N);});
+                BENCHMARK(Laplacians::interior_3d_mdrange, output_base, out_3d, x_3d, N);
                 if (N == 32) Laplacians::check_interior(out_3d, N);
-                benchmark("modulo_3d_flat", output_base, [&](){Laplacians::modulo_3d_flat(out_3d, x_3d, N);});
+                BENCHMARK(Laplacians::modulo_3d_flat, output_base, out_3d, x_3d, N);
                 if (N == 32)
                 {   
                     Laplacians::check_interior(out_3d, N); 
                     Laplacians::check_exterior(out_3d, N);
                 }
-                benchmark("modulo_3d_mdrange", output_base, [&](){Laplacians::modulo_3d_mdrange(out_3d, x_3d, N);});
+                BENCHMARK(Laplacians::modulo_3d_mdrange, output_base, out_3d, x_3d, N);
                 if (N == 32)
                 {   
                     Laplacians::check_interior(out_3d, N); 
                     Laplacians::check_exterior(out_3d, N);
                 }
-                benchmark("conditional_add_3d_flat", output_base, [&](){Laplacians::conditional_add_3d_flat(out_3d, x_3d, N);});
+                BENCHMARK(Laplacians::conditional_add_3d_flat, output_base, out_3d, x_3d, N);
                 if (N == 32)
                 {   
                     Laplacians::check_interior(out_3d, N); 
                     Laplacians::check_exterior(out_3d, N);
                 }
-                benchmark("conditional_add_3d_mdrange", output_base, [&](){Laplacians::conditional_add_3d_mdrange(out_3d, x_3d, N);});
+                BENCHMARK(Laplacians::conditional_add_3d_mdrange, output_base, out_3d, x_3d, N);
                 if (N == 32)
                 {   
                     Laplacians::check_interior(out_3d, N); 
                     Laplacians::check_exterior(out_3d, N);
                 }
-                benchmark("ternary_3d_flat", output_base, [&](){Laplacians::ternary_3d_flat(out_3d, x_3d, N);});
+                BENCHMARK(Laplacians::ternary_3d_flat, output_base, out_3d, x_3d, N);
                 if (N == 32)
                 {   
                     Laplacians::check_interior(out_3d, N); 
                     Laplacians::check_exterior(out_3d, N);
                 }
-                benchmark("ternary_3d_mdrange", output_base, [&](){Laplacians::ternary_3d_mdrange(out_3d, x_3d, N);});
+                BENCHMARK(Laplacians::ternary_3d_mdrange, output_base, out_3d, x_3d, N);
                 if (N == 32)
                 {   
                     Laplacians::check_interior(out_3d, N); 

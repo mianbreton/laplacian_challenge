@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -e # Exit immediately if a failure is detected
 
 echo "=== Running All Laplacian Binaries with Varying OMP_NUM_THREADS ==="
 echo "Timestamp: $(date)"
