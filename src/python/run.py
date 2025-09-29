@@ -106,15 +106,22 @@ if __name__ == "__main__":
             for k in Kernel:
                 timing(k, N, runs, NCPU)
     # GPU runs
-    ti.init(arch=ti.gpu)
-    print("")
-    print("GPU runs")
-    for N in N_list:
+    try:
+        ti.init(arch=ti.gpu)
+        GPU_AVAILABLE = True
+    except Exception as e:
+        print("No GPU available, skipping GPU runs:", e)
+        GPU_AVAILABLE = False
+
+    if GPU_AVAILABLE:
         print("")
-        print(f"cells along one direction: {N:{'-'}<{50}}")
-        print("")
-        for k in Kernel:
-            if "TAICHI" in k.name:
-                timing(k, N, runs, NCPU)
+        print("GPU runs")
+        for N in N_list:
+            print("")
+            print(f"cells along one direction: {N:{'-'}<{50}}")
+            print("")
+            for k in Kernel:
+                if "TAICHI" in k.name:
+                    timing(k, N, runs, NCPU)
 
 
