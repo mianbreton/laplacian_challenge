@@ -37,6 +37,7 @@ endif()
 set(KOKKOS_HAS_GPU OFF)
 if(Kokkos_ENABLE_CUDA OR Kokkos_ENABLE_HIP OR Kokkos_ENABLE_SYCL)
     set(KOKKOS_HAS_GPU ON)
+    add_compile_definitions(KOKKOS_HAS_GPU)
     message(STATUS "Kokkos GPU support enabled.")
 endif()
 

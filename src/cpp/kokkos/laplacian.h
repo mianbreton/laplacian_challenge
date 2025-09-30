@@ -50,7 +50,7 @@ void assertion_host(const float value, const float expected)
 KOKKOS_INLINE_FUNCTION
 void assertion(const float value, const float expected)
 {
-    #ifdef KOKKOS_ENABLE_CUDA
+    #ifdef KOKKOS_HAS_GPU
         assertion_device(value, expected);
     #else
         assertion_host(value, expected);
