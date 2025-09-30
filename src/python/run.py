@@ -77,7 +77,8 @@ def timing(kernel: Kernel, N, runs, NCPU):
                 nl.check_exterior(out)
         for i in range(runs):
             start = time.time()
-            func(out_ti, x_ti, N  )
+            func(out_ti, x_ti, N)
+            ti.sync()
             time_array[i] = time.time() - start
     else:
         raise ValueError(f"{kernel.name=}, must contain 'NUMBA' or 'TAICHI'")
@@ -122,6 +123,6 @@ if __name__ == "__main__":
             print("")
             for k in Kernel:
                 if "TAICHI" in k.name:
-                    timing(k, N, runs, NCPU)
+                    timing(k, N, runs, 0)
 
 
