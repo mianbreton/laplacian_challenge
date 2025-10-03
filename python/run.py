@@ -6,7 +6,7 @@ import numba
 import time
 from rich import print
 import taichi as ti
-
+import argparse
 
 class Kernel(Enum):
     NUMBA_INTERIOR_ONLY = 0
@@ -91,9 +91,34 @@ def timing(kernel: Kernel, N, runs, NCPU):
 
 
 if __name__ == "__main__":
-    NCPUs = [1, 2, 4, 8, 16]
-    N_list = [32, 64, 128, 256]
-    runs = 10
+
+    parser = argparse.ArgumentParser(description="Run Laplacian benchmarks")
+    parser.add_argument(
+        "--ncells",
+        nargs="+",
+        type=int,
+        default=[32, 64, 128, 256],
+        help="Number of cells along each dimension"
+    )
+    parser.add_argument(
+        "--ncpus",
+        nargs="+",
+        type=int,
+        default=[1, 2, 4, 8, 16],
+        help="Number of CPU threads to test"
+    )
+    parser.add_argument(
+        "--runs",
+        type=int,
+        default=10,
+        help="Number of repetitions for timing"
+    )
+
+    args = parser.parse_args()
+
+    N_list = args.ncells
+    NCPUs = args.ncpus
+    runs = args.runs
 
     # CPU runs
     for NCPU in NCPUs:

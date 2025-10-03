@@ -108,7 +108,7 @@ To run the Python example
 
 ```sh
 cd python/
-python run.py
+python run.py # Which by defaults runs as 'python run.py --ncells 32 64 128 256 --ncpus 1 2 4 8 16 --runs 10'
 ```
 
 Both runs will produce runtime files in `./timings/`

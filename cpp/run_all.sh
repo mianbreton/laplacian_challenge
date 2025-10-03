@@ -18,6 +18,7 @@ LOG_FILE="run_all_results_with_threads.log"
 # Thread counts to test (adjust to match your machine's CPU count)
 NCPUs=(1 2 4 8 16)
 NCELLS=(32 64 128 256)
+runs=10
 
 # Loop over each thread count
 for threads in "${NCPUs[@]}"; do
@@ -26,20 +27,15 @@ for threads in "${NCPUs[@]}"; do
         export OMP_PROC_BIND=$proc_bind
         echo "--- OMP_NUM_THREADS=$threads --- OMP_PROC_BIND=$proc_bind"
         echo "# --- OMP_NUM_THREADS=$threads --- OMP_PROC_BIND=$proc_bind" >> "$LOG_FILE"
-        
-        for technology in "${technologies[@]}"; do
-            for exe in $(ls ${script_dir}/bin/laplacian_* | grep ${technology}); do
-                if [[ -x "$exe" ]]; then
+        for technology in "${technologies[@]}"; do 
+            for exe in "${script_dir}/bin/laplacian_${technology}"*; do
+                [[ -x "$exe" ]] || continue
                     echo "------------- Running $exe -------------"
                     echo "" >> "$LOG_FILE"
                     echo "------------- Running $exe -------------" >> "$LOG_FILE"
-                    for N in "${NCELLS[@]}"; do
-                        $exe --ncells $N --basename $script_dir/timings/runtime_BIND_${proc_bind}_NCPUs_${threads} >> $LOG_FILE
-                    done
-                fi
+                    $exe --ncells ${NCELLS[@]} --runs $runs --basename $script_dir/timings/runtime_BIND_${proc_bind}_NCPUs_${threads} >> $LOG_FILE
             done
         done
-
         echo ""
     done
 done
