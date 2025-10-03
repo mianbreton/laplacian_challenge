@@ -41,7 +41,7 @@ if(Kokkos_ENABLE_CUDA OR Kokkos_ENABLE_HIP OR Kokkos_ENABLE_SYCL)
     message(STATUS "Kokkos GPU support enabled.")
 endif()
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/../../external/kokkos ${CMAKE_BINARY_DIR}/kokkos_build)
+add_subdirectory(${CMAKE_SOURCE_DIR}/external/kokkos ${CMAKE_BINARY_DIR}/kokkos_build)
 
 
 foreach(OPT ${OPT_LEVELS})
@@ -50,7 +50,7 @@ foreach(OPT ${OPT_LEVELS})
 
         if(KOKKOS_HAS_GPU)
             # Kokkos GPU
-            add_executable(laplacian_kokkos_gpu_${OPT}_${FLAG} kokkos/run.cpp)
+            add_executable(laplacian_kokkos_gpu_${OPT}_${FLAG} src/kokkos_impl/run.cpp)
 
             target_link_libraries(laplacian_kokkos_gpu_${OPT}_${FLAG} PRIVATE OpenMP::OpenMP_CXX)
             target_link_libraries(laplacian_kokkos_gpu_${OPT}_${FLAG} PRIVATE TBB::tbb)
@@ -60,13 +60,13 @@ foreach(OPT ${OPT_LEVELS})
             target_link_libraries(laplacian_kokkos_gpu_${OPT}_${FLAG} PRIVATE kokkoscore kokkosalgorithms kokkoscontainers kokkossimd dl pthread cuda cudart OpenMP::OpenMP_CXX TBB::tbb)
         else()
             # Native, without Kokkos
-            add_executable(laplacian_native_${OPT}_${FLAG} native/run.cpp)
+            add_executable(laplacian_native_${OPT}_${FLAG} src/native_impl/run.cpp)
             target_compile_options(laplacian_native_${OPT}_${FLAG} PRIVATE -${OPT} ${FLAG_OPTION} ${COMMON_FLAGS})
             target_link_libraries(laplacian_native_${OPT}_${FLAG} PRIVATE OpenMP::OpenMP_CXX)
 
             if(KOKKOS_HAS_CPU)
                 # Kokkos CPU
-                add_executable(laplacian_kokkos_cpu_${OPT}_${FLAG} kokkos/run.cpp)
+                add_executable(laplacian_kokkos_cpu_${OPT}_${FLAG} src/kokkos_impl/run.cpp)
 
                 target_link_libraries(laplacian_kokkos_cpu_${OPT}_${FLAG} PRIVATE OpenMP::OpenMP_CXX)
                 target_link_libraries(laplacian_kokkos_cpu_${OPT}_${FLAG} PRIVATE TBB::tbb)
