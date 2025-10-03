@@ -21,7 +21,7 @@ dependencies = [
     "numba",
     "taichi",
     "rich",
-    "icc-rt", # Optional
+    #"icc-rt", # Optional
 ]
 
 [tool.pdm.build]
