@@ -62,14 +62,14 @@ The C++ and Python tests are independent.
 ```sh
 # Build native and Kokkos CPU executables
 cd cpp/
-mkdir build_openmp; cd build_openmp
-cmake .. -DKokkos_ENABLE_OPENMP=ON
+mkdir -p build/openmp; cd build/openmp
+cmake ../../ -DKokkos_ENABLE_OPENMP=ON
 make -j $NCPU
 
 # Build Kokkos GPU executables with CUDA
 cd cpp/
-mkdir build_cuda; cd build_cuda
-cmake .. -DKokkos_ENABLE_OPENMP=ON -DKokkos_ENABLE_CUDA=ON
+mkdir -p build/cuda; cd build/cuda
+cmake ../../ -DKokkos_ENABLE_OPENMP=ON -DKokkos_ENABLE_CUDA=ON
 make -j $NCPU
 ```
 
