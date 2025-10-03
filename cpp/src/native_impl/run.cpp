@@ -85,54 +85,54 @@ int main(int argc, char* argv[])
             Run::initialise_vector3d(x_3d, N);
             Run::initialise_vector3d(out_3d, N);
 
-            BENCHMARK(Native::modulo_3d_nested, output_base, runs, out_3d, x_3d, N);
+            BENCHMARK(Laplacian::modulo_3d_nested, output_base, runs, out_3d, x_3d, N);
             if (N == 32)
             {
-                Native::check_interior(out_3d, N);
-                Native::check_exterior(out_3d, N);
+                Run::check_interior(out_3d, N);
+                Run::check_exterior(out_3d, N);
             }
-            BENCHMARK(Native::modulo_3d_nested_simd, output_base, runs, out_3d, x_3d, N);
+            BENCHMARK(Laplacian::modulo_3d_nested_simd, output_base, runs, out_3d, x_3d, N);
             if (N == 32)
             {
-                Native::check_interior(out_3d, N);
-                Native::check_exterior(out_3d, N);
+                Run::check_interior(out_3d, N);
+                Run::check_exterior(out_3d, N);
             }
-            BENCHMARK(Native::conditional_add_3d_nested, output_base, runs, out_3d, x_3d, N);
+            BENCHMARK(Laplacian::conditional_add_3d_nested, output_base, runs, out_3d, x_3d, N);
             if (N == 32)
             {
-                Native::check_interior(out_3d, N);
-                Native::check_exterior(out_3d, N);
+                Run::check_interior(out_3d, N);
+                Run::check_exterior(out_3d, N);
             }
-            BENCHMARK(Native::conditional_add_3d_nested_simd, output_base, runs, out_3d, x_3d, N);
+            BENCHMARK(Laplacian::conditional_add_3d_nested_simd, output_base, runs, out_3d, x_3d, N);
             if (N == 32)
             {
-                Native::check_interior(out_3d, N);
-                Native::check_exterior(out_3d, N);
+                Run::check_interior(out_3d, N);
+                Run::check_exterior(out_3d, N);
             }
-            BENCHMARK(Native::ternary_3d_nested_simd, output_base, runs, out_3d, x_3d, N);
+            BENCHMARK(Laplacian::ternary_3d_nested_simd, output_base, runs, out_3d, x_3d, N);
             if (N == 32)
             {
-                Native::check_interior(out_3d, N);
-                Native::check_exterior(out_3d, N);
+                Run::check_interior(out_3d, N);
+                Run::check_exterior(out_3d, N);
             }
-            BENCHMARK(Native::ternary_3d_nested, output_base, runs, out_3d, x_3d, N);
+            BENCHMARK(Laplacian::ternary_3d_nested, output_base, runs, out_3d, x_3d, N);
             if (N == 32)
             {
-                Native::check_interior(out_3d, N);
-                Native::check_exterior(out_3d, N);
+                Run::check_interior(out_3d, N);
+                Run::check_exterior(out_3d, N);
             }
-            BENCHMARK(Native::interior_3d_flat, output_base, runs, out_3d, x_3d, N);
-            if (N == 32) Native::check_interior(out_3d, N);
-            BENCHMARK(Native::interior_3d_flat_simd, output_base, runs, out_3d, x_3d, N);
-            if (N == 32) Native::check_interior(out_3d, N);
-            BENCHMARK(Native::interior_3d_nested, output_base, runs, out_3d, x_3d, N);
-            if (N == 32) Native::check_interior(out_3d, N);
-            BENCHMARK(Native::interior_3d_nested_simd, output_base, runs, out_3d, x_3d, N);
-            if (N == 32) Native::check_interior(out_3d, N);
-            BENCHMARK(Native::interior_3d_nested_constexpr, output_base, runs, out_3d, x_3d, N);
-            if (N == 32) Native::check_interior(out_3d, N);
-            BENCHMARK(Native::interior_3d_nested_constexpr_simd, output_base, runs, out_3d, x_3d, N);
-            if (N == 32) Native::check_interior(out_3d, N);
+            BENCHMARK(Laplacian::interior_3d_flat, output_base, runs, out_3d, x_3d, N);
+            if (N == 32) Run::check_interior(out_3d, N);
+            BENCHMARK(Laplacian::interior_3d_flat_simd, output_base, runs, out_3d, x_3d, N);
+            if (N == 32) Run::check_interior(out_3d, N);
+            BENCHMARK(Laplacian::interior_3d_nested, output_base, runs, out_3d, x_3d, N);
+            if (N == 32) Run::check_interior(out_3d, N);
+            BENCHMARK(Laplacian::interior_3d_nested_simd, output_base, runs, out_3d, x_3d, N);
+            if (N == 32) Run::check_interior(out_3d, N);
+            BENCHMARK(Laplacian::interior_3d_nested_constexpr, output_base, runs, out_3d, x_3d, N);
+            if (N == 32) Run::check_interior(out_3d, N);
+            BENCHMARK(Laplacian::interior_3d_nested_constexpr_simd, output_base, runs, out_3d, x_3d, N);
+            if (N == 32) Run::check_interior(out_3d, N);
         }
 
         // 1D std::vector<float>
@@ -141,25 +141,25 @@ int main(int argc, char* argv[])
             Run::initialise_vector1d(x_1d, N);
             Run::initialise_vector1d(out_1d, N);
 
-            BENCHMARK(Native::interior_1d_flat, output_base, runs, out_1d, x_1d, N);
-            if (N == 32) Native::check_interior(out_1d, N);
-            BENCHMARK(Native::interior_1d_flat_simd, output_base, runs, out_1d, x_1d, N);
-            if (N == 32) Native::check_interior(out_1d, N);
-            BENCHMARK(Native::interior_1d_nested, output_base, runs, out_1d, x_1d, N);
-            if (N == 32) Native::check_interior(out_1d, N);
-            BENCHMARK(Native::interior_1d_nested_simd, output_base, runs, out_1d, x_1d, N);
-            if (N == 32) Native::check_interior(out_1d, N);
-            BENCHMARK(Native::modulo_1d_flat, output_base, runs, out_1d, x_1d, N);
+            BENCHMARK(Laplacian::interior_1d_flat, output_base, runs, out_1d, x_1d, N);
+            if (N == 32) Run::check_interior(out_1d, N);
+            BENCHMARK(Laplacian::interior_1d_flat_simd, output_base, runs, out_1d, x_1d, N);
+            if (N == 32) Run::check_interior(out_1d, N);
+            BENCHMARK(Laplacian::interior_1d_nested, output_base, runs, out_1d, x_1d, N);
+            if (N == 32) Run::check_interior(out_1d, N);
+            BENCHMARK(Laplacian::interior_1d_nested_simd, output_base, runs, out_1d, x_1d, N);
+            if (N == 32) Run::check_interior(out_1d, N);
+            BENCHMARK(Laplacian::modulo_1d_flat, output_base, runs, out_1d, x_1d, N);
             if (N == 32)
             {
-                Native::check_interior(out_1d, N);
-                Native::check_exterior(out_1d, N);
+                Run::check_interior(out_1d, N);
+                Run::check_exterior(out_1d, N);
             }
-            BENCHMARK(Native::modulo_1d_flat_simd, output_base, runs, out_1d, x_1d, N);
+            BENCHMARK(Laplacian::modulo_1d_flat_simd, output_base, runs, out_1d, x_1d, N);
             if (N == 32) 
             {
-                Native::check_interior(out_1d, N);
-                Native::check_exterior(out_1d, N);
+                Run::check_interior(out_1d, N);
+                Run::check_exterior(out_1d, N);
             }
         }
 
@@ -171,34 +171,34 @@ int main(int argc, char* argv[])
             Run::initialise_malloc(x_1d_malloc, N);
             Run::initialise_malloc(out_1d_malloc, N);
 
-            BENCHMARK(Native::interior_1d_malloc_nested, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_i32_max32_idx32, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_i32_max32_idx32_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_i32_max32_idx64, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_i32_max32_idx64_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_i32_max32_idx64promotion, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_i32_max32_idx64promotion_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_i32_max64_idx64, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_i32_max64_idx64_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_i32_max64_idx32, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_i32_max64_idx32_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_constexpr, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
-            BENCHMARK(Native::interior_1d_malloc_nested_constexpr_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
-            if (N == 32) Native::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_i32_max32_idx32, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_i32_max32_idx32_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_i32_max32_idx64, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_i32_max32_idx64_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_i32_max32_idx64promotion, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_i32_max32_idx64promotion_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_i32_max64_idx64, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_i32_max64_idx64_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_i32_max64_idx32, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_i32_max64_idx32_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_constexpr, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
+            BENCHMARK(Laplacian::interior_1d_malloc_nested_constexpr_simd, output_base, runs, out_1d_malloc, x_1d_malloc, N);
+            if (N == 32) Run::check_interior(out_1d_malloc, N);
 
             std::free(x_1d_malloc);
             std::free(out_1d_malloc);
@@ -212,8 +212,8 @@ int main(int argc, char* argv[])
             Run::initialise_malloc(x_1d_aligned, N);
             Run::initialise_malloc(out_1d_aligned, N);
 
-            BENCHMARK(Native::interior_1d_aligned_nested, output_base, runs, out_1d_aligned, x_1d_aligned, N);
-            if (N == 32) Native::check_interior(out_1d_aligned, N);
+            BENCHMARK(Laplacian::interior_1d_aligned_nested, output_base, runs, out_1d_aligned, x_1d_aligned, N);
+            if (N == 32) Run::check_interior(out_1d_aligned, N);
 
             std::free(x_1d_aligned);
             std::free(out_1d_aligned);
