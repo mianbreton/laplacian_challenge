@@ -17,6 +17,7 @@ LOG_FILE="run_all_results_with_threads.log"
 
 # Thread counts to test (adjust to match your machine's CPU count)
 NCPUs=(1 2 4 8 16)
+NCELLS=(32 64 128 256)
 
 # Loop over each thread count
 for threads in "${NCPUs[@]}"; do
@@ -32,7 +33,9 @@ for threads in "${NCPUs[@]}"; do
                     echo "------------- Running $exe -------------"
                     echo "" >> "$LOG_FILE"
                     echo "------------- Running $exe -------------" >> "$LOG_FILE"
-                    $exe $script_dir/timings/runtime_BIND_${proc_bind}_NCPUs_${threads} >> $LOG_FILE
+                    for N in "${NCELLS[@]}"; do
+                        $exe --ncells $N --basename $script_dir/timings/runtime_BIND_${proc_bind}_NCPUs_${threads} >> $LOG_FILE
+                    done
                 fi
             done
         done
