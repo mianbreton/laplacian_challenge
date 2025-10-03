@@ -80,3 +80,8 @@ foreach(OPT ${OPT_LEVELS})
     endforeach()
 endforeach()
 
+option(ENABLE_UNIT_TESTING "Build unit tests" OFF)
+if(ENABLE_UNIT_TESTING)
+    enable_testing()
+    add_subdirectory(tests)
+endif()

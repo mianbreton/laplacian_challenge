@@ -73,17 +73,20 @@ cmake ../../ -DKokkos_ENABLE_OPENMP=ON -DKokkos_ENABLE_CUDA=ON
 make -j $NCPU
 ```
 
-The following GPU backends are available
+Configuration options ( cmake -D arguments ) include :
 
 ```sh
-DKokkos_ENABLE_CUDA
-DKokkos_ENABLE_HIP
-DKokkos_ENABLE_SYCL
+# The following GPU backends are available
+DKokkos_ENABLE_CUDA=ON/OFF
+DKokkos_ENABLE_HIP=ON/OFF
+DKokkos_ENABLE_SYCL=ON/OFF
+# Debug, adds the -g compilation flag
+-DDEBUG=ON/OFF
+# Enable unit testing
+-DENABLE_UNIT_TESTING=ON/OFF
 ```
 
-And even `DKokkos_ENABLE_SERIAL` if OpenMP is not found. 
-
-Additionally, you can add the flag `-DDEBUG=ON` to enable `-g` during compilation.
+If unit tests are enabled, run `ctest` in the build directory to test the build.
 
 ### Python
 To install all the dependencies
