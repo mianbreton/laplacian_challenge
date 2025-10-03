@@ -1,6 +1,6 @@
 import numpy as np
-import Numba.laplacian as nl
-import Taichi.laplacian as tl
+import numba_impl.laplacian as nl
+import taichi_impl.laplacian as tl
 from enum import Enum
 import numba
 import time

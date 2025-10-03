@@ -61,13 +61,13 @@ The C++ and Python tests are independent.
 
 ```sh
 # Build native and Kokkos CPU executables
-cd src/cpp/
+cd cpp/
 mkdir build_openmp; cd build_openmp
 cmake .. -DKokkos_ENABLE_OPENMP=ON
 make -j $NCPU
 
 # Build Kokkos GPU executables with CUDA
-cd src/cpp/
+cd cpp/
 mkdir build_cuda; cd build_cuda
 cmake .. -DKokkos_ENABLE_OPENMP=ON -DKokkos_ENABLE_CUDA=ON
 make -j $NCPU
@@ -88,7 +88,7 @@ Additionally, you can add the flag `-DDEBUG=ON` to enable `-g` during compilatio
 ### Python
 To install all the dependencies
 ```sh
-cd src/python
+cd python/
 python -m pip install -e .
 ```
 
@@ -100,14 +100,14 @@ python -m pip install -e .
 You can run the C++ executables with
 
 ```sh
-cd src/cpp
+cd cpp/
 ./run_all.sh
 ```
 
 To run the Python example
 
 ```sh
-cd src/python
+cd python/
 python run.py
 ```
 
