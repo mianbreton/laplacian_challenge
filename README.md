@@ -97,6 +97,12 @@ python -m pip install -e .
 
 > :warning: Currently, it seems that Taichi does not support Python 3.11 and above
 
+To test the installation, first install `pytest` and run the tests
+```sh
+python -m pip install pytest
+# Then, in the python/ directory
+pytest
+```
 
 ### Run
 
@@ -107,7 +113,7 @@ cd cpp/
 ./run_all.sh
 ```
 
-To run the Python example
+To run the Python implementations
 
 ```sh
 cd python/
