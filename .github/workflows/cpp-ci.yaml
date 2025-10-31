@@ -34,3 +34,32 @@ jobs:
         run: |
           cd cpp/build/openmp
           ctest --output-on-failure
+          
+    # --- GPU / CUDA build (compile-only) ---
+  build-cuda:
+    runs-on: ubuntu-22.04
+    env:
+      NCPU: 4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ make git libtbb-dev
+
+      - name: Install CUDA toolkit
+        uses: Jimver/cuda-toolkit@v0.2.17
+        with:
+          cuda: "12.2.0"
+
+      - name: Build CUDA (Kokkos)
+        run: |
+          cd cpp
+          mkdir -p build/cuda
+          cd build/cuda
+          cmake ../../ -DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_OPENMP=ON -DENABLE_UNIT_TESTING=ON
+          make -j $NCPU
