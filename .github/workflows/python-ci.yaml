@@ -1,0 +1,36 @@
+name: Python CPU Tests
+
+on:
+  push:
+    paths:
+      - 'python/**'
+  pull_request:
+
+jobs:
+  test-cpu:
+    name: Run CPU-only Python tests
+    runs-on: ubuntu-22.04
+
+    steps:
+      # Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          cd python
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          pip install pytest
+
+      # Run CPU tests only (marked with @pytest.mark.cpu)
+      - name: Run CPU tests
+        run: |
+          pytest -k "cpu" -v

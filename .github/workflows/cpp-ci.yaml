@@ -1,0 +1,77 @@
+name: C++ Build & Test
+
+on:
+  push:
+    paths:
+      - 'cpp/**'
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-22.04
+    env:
+      NCPU: 4
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+            submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ make git libtbb-dev
+
+      # --- CPU / OpenMP build ---
+      - name: Build CPU (OpenMP)
+        run: |
+          cd cpp
+          mkdir -p build/openmp
+          cd build/openmp
+          cmake ../../ -DKokkos_ENABLE_OPENMP=ON -DENABLE_UNIT_TESTING=ON
+          make -j $NCPU
+
+      - name: Run CPU tests
+        run: |
+          cd cpp/build/openmp
+          ctest --output-on-failure
+
+    # --- GPU / CUDA build (compile-only) ---
+  build-cuda:
+    runs-on: ubuntu-22.04
+    env:
+      NCPU: 4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ make git libtbb-dev
+
+      - name: Install CUDA toolkit
+        uses: Jimver/cuda-toolkit@v0.2.24
+        with:
+            cuda: '12.5.0'
+            method: "network"
+            use-github-cache: false
+            use-local-cache: false
+
+      - name: Verify CUDA installation
+        run: nvcc --version
+
+      - name: Build CUDA (Kokkos)
+        run: |
+          cd cpp
+          mkdir -p build/cuda
+          cd build/cuda
+          cmake ../../  \
+            -DKokkos_ENABLE_CUDA=ON \
+            -DKokkos_ARCH_AMPERE80=ON \
+            -DKokkos_ENABLE_OPENMP=ON \
+            -DENABLE_UNIT_TESTING=ON
+          make -j $NCPU

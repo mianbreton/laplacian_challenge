@@ -1,6 +1,7 @@
 import numpy as np
 import numba_impl.laplacian as nl
 import taichi_impl.laplacian as tl
+import numpy_impl.laplacian as npl
 from enum import Enum
 import numba
 import time
@@ -20,6 +21,7 @@ class Kernel(Enum):
     TAICHI_NDRANGE_DOMAIN = 8
     TAICHI_GROUPED_MODULO = 9
     TAICHI_GROUPED_DOMAIN = 10
+    NUMPY_BRUTE_FORCE_VEC = 11
 
 def timing(kernel: Kernel, N, runs, NCPU):
     # Set up the input/output arrays
@@ -41,20 +43,21 @@ def timing(kernel: Kernel, N, runs, NCPU):
         Kernel.TAICHI_NDRANGE_DOMAIN: tl.ndrange_domain,
         Kernel.TAICHI_GROUPED_MODULO: tl.grouped_modulo,
         Kernel.TAICHI_GROUPED_DOMAIN: tl.grouped_domain,
+        Kernel.NUMPY_BRUTE_FORCE_VEC: npl.brute_force_vectorize,
     }
 
     func = kernel_map[kernel]
 
     # Timing
     time_array = np.empty(runs)
-    if "NUMBA" in kernel.name:
+    if "NUMBA" in kernel.name or "NUMPY" in kernel.name:
         # Warm up (especially important for Numba JIT)
         func(out, x)
         if N == 32:
             print("Checking correctness for N=32")
             nl.check_interior(out)
             if not "INTERIOR" in kernel.name:
-                print("Check also boundaries") 
+                print("Check also boundaries")
                 nl.check_exterior(out)
         for i in range(runs):
             start = time.time()
@@ -73,21 +76,21 @@ def timing(kernel: Kernel, N, runs, NCPU):
             print("Checking correctness for N=32")
             nl.check_interior(out)
             if not "INTERIOR" in kernel.name:
-                print("Check also boundaries") 
+                print("Check also boundaries")
                 nl.check_exterior(out)
         for i in range(runs):
             start = time.time()
             func(out_ti, x_ti, N)
             ti.sync()
             time_array[i] = time.time() - start
+
     else:
-        raise ValueError(f"{kernel.name=}, must contain 'NUMBA' or 'TAICHI'")
-    
+        raise ValueError(f"{kernel.name=}, must contain 'NUMBA' or 'TAICHI' or 'NUMPY'")
+
     median = np.median(time_array)*1e3
     std = np.std(time_array)*1e3
     np.savetxt(f"timings/time_{kernel.name}_ncells1d_{N}_NCPU_{NCPU}.dat", time_array)
     print(f"{kernel.name}: Time: {median:.4f} (median) [+- {std:.4f}] milliseconds  ( {runs} runs )")
-
 
 
 if __name__ == "__main__":

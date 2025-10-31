@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <cstdint>
@@ -7,15 +9,9 @@
 
 
 
-class Native {
+class Laplacian {
     public:
 
-    static void check_interior(const std::vector<float>& x, const size_t N);
-    static void check_interior(const float* x, const size_t N);
-    static void check_interior(const std::vector<std::vector<std::vector<float>>>& x, const size_t N);
-    static void check_exterior(const std::vector<float>& x, const size_t N);
-    static void check_exterior(const float* x, const size_t N);
-    static void check_exterior(const std::vector<std::vector<std::vector<float>>>& x, const size_t N);
     static void modulo_1d_flat (std::vector<float>& out, const std::vector<float>& x, const size_t N);
     static void modulo_1d_flat_simd (std::vector<float>& out, const std::vector<float>& x, const size_t N);
     static void modulo_3d_nested (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N);
@@ -55,7 +51,7 @@ class Native {
     static void interior_1d_aligned_nested(float* out, const float* x, size_t N);
 };
 
-void Native::interior_1d_malloc_nested_constexpr(float* out, const float* x, const size_t N) 
+void Laplacian::interior_1d_malloc_nested_constexpr(float* out, const float* x, const size_t N) 
 {
     switch (N)
     {
@@ -84,7 +80,7 @@ void Native::interior_1d_malloc_nested_constexpr(float* out, const float* x, con
             break;
     }
 }
-void Native::interior_1d_malloc_nested_constexpr_simd(float* out, const float* x, const size_t N) 
+void Laplacian::interior_1d_malloc_nested_constexpr_simd(float* out, const float* x, const size_t N) 
 {
     switch (N)
     {
@@ -114,7 +110,7 @@ void Native::interior_1d_malloc_nested_constexpr_simd(float* out, const float* x
     }
 }
 
-void Native::interior_3d_nested_constexpr(std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N) 
+void Laplacian::interior_3d_nested_constexpr(std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N) 
 {
     switch (N)
     {
@@ -140,7 +136,7 @@ void Native::interior_3d_nested_constexpr(std::vector<std::vector<std::vector<fl
             break;
     }
 }
-void Native::interior_3d_nested_constexpr_simd(std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N) 
+void Laplacian::interior_3d_nested_constexpr_simd(std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N) 
 {
     switch (N)
     {
@@ -167,219 +163,7 @@ void Native::interior_3d_nested_constexpr_simd(std::vector<std::vector<std::vect
     }
 }
 
-void assertion(const float value, const float expected)
-{
-    const bool isGood = (fabsf(value - expected) < 1e-7f);
-    assert(isGood);
-}
-
-void Native::check_interior(const std::vector<float>& x, const size_t N)
-{
-    printf("Check interior\n");
-    const size_t N2 = N*N;
-    const size_t Nm1 = N - 1ul;
-    for(size_t i=1ul; i < Nm1; i++)
-    for(size_t j=1ul; j < Nm1; j++)
-    for(size_t k=1ul; k < Nm1; k++)
-    {
-        assertion(x[i*N2 + j*N + k], 0.f);
-    }
-}
-void Native::check_interior(const float* x, const size_t N)
-{
-    printf("Check interior\n");
-    const size_t N2 = N*N;
-    const size_t Nm1 = N - 1ul;
-    for(size_t i=1ul; i < Nm1; i++)
-    for(size_t j=1ul; j < Nm1; j++)
-    for(size_t k=1ul; k < Nm1; k++)
-    {
-        assertion(x[i*N2 + j*N + k], 0.f);
-    }
-}
-void Native::check_interior(const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
-{   
-    printf("Check interior\n");
-    const size_t Nm1 = N - 1ul;
-    for(size_t i=1ul; i < Nm1; i++)
-    for(size_t j=1ul; j < Nm1; j++)
-    for(size_t k=1ul; k < Nm1; k++)
-    {
-        assertion(x[i][j][k], 0.f);
-    }
-}
-void Native::check_exterior(const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
-{
-    printf("Check exterior\n");
-    const size_t Nm1 = N - 1ul;
-    const size_t N2 = N*N;
-    const size_t N3 = N2*N;
-    // Faces
-    for(size_t i=1ul; i < Nm1; i++)
-    for(size_t k=1ul; k < Nm1; k++)
-    {
-        assertion(x[i][Nm1][k], -static_cast<float>(N2*N2));
-        assertion(x[i][0][k], static_cast<float>(N2*N2));
-    }
-    for(size_t j=1ul; j < Nm1; j++)
-    for(size_t k=1ul; k < Nm1; k++)
-    {
-        assertion(x[Nm1][j][k], -static_cast<float>(N2*N3));
-        assertion(x[0][j][k], static_cast<float>(N2*N3));
-    }
-    for(size_t i=1ul; i < Nm1; i++)
-    for(size_t j=1ul; j < Nm1; j++)
-    {
-        assertion(x[i][j][Nm1], -static_cast<float>(N2*N));
-        assertion(x[i][j][0], static_cast<float>(N2*N));
-    }
-    // Edges 
-    for(size_t i=1ul; i < Nm1; i++)
-    {
-        assertion(x[i][Nm1][Nm1], -static_cast<float>(N2*(N2+N)));
-        assertion(x[i][Nm1][0], -static_cast<float>(N2*(N2-N)));
-        assertion(x[i][0][Nm1], static_cast<float>(N2*(N2-N)));
-        assertion(x[i][0][0], static_cast<float>(N2*(N2+N)));
-    }
-    for(size_t j=1ul; j < Nm1; j++)
-    {
-        assertion(x[Nm1][j][Nm1], -static_cast<float>(N2*(N3+N)));
-        assertion(x[Nm1][j][0], -static_cast<float>(N2*(N3-N)));
-        assertion(x[0][j][Nm1], static_cast<float>(N2*(N3-N)));
-        assertion(x[0][j][0], static_cast<float>(N2*(N3+N)));
-    }
-    for(size_t k=1ul; k < Nm1; k++)
-    {
-        assertion(x[Nm1][Nm1][k], -static_cast<float>(N2*(N3+N2)));
-        assertion(x[Nm1][0][k], -static_cast<float>(N2*(N3-N2)));
-        assertion(x[0][Nm1][k], static_cast<float>(N2*(N3-N2)));
-        assertion(x[0][0][k], static_cast<float>(N2*(N3+N2)));
-    }
-    // Corners
-    assertion(x[Nm1][Nm1][Nm1] , -static_cast<float>(N2*(N3+N2+N)));
-    assertion(x[Nm1][Nm1][0], -static_cast<float>(N2*(N3+N2-N)));
-    assertion(x[Nm1][0][Nm1], -static_cast<float>(N2*(N3-N2+N)));
-    assertion(x[Nm1][0][0], -static_cast<float>(N2*(N3-N2-N)));
-    assertion(x[0][Nm1][Nm1], static_cast<float>(N2*(N3-N2-N)));
-    assertion(x[0][Nm1][0], static_cast<float>(N2*(N3-N2+N)));
-    assertion(x[0][0][Nm1], static_cast<float>(N2*(N3+N2-N)));
-    assertion(x[0][0][0], static_cast<float>(N2*(N3+N2+N)));
-}
-void Native::check_exterior(const std::vector<float>& x, const size_t N)
-{
-    printf("Check exterior\n");
-    const size_t Nm1 = N - 1ul;
-    const size_t N2 = N*N;
-    const size_t N3 = N2*N;
-    // Faces
-    for(size_t i=1ul; i < Nm1; i++)
-    for(size_t k=1ul; k < Nm1; k++)
-    {
-        assertion(x[i*N2 + Nm1*N + k], -static_cast<float>(N2*N2));
-        assertion(x[i*N2 + k], static_cast<float>(N2*N2));
-    }
-    for(size_t j=1ul; j < Nm1; j++)
-    for(size_t k=1ul; k < Nm1; k++)
-    {
-        assertion(x[Nm1*N2 + j*N + k], -static_cast<float>(N2*N3));
-        assertion(x[j*N + k], static_cast<float>(N2*N3));
-    }
-    for(size_t i=1ul; i < Nm1; i++)
-    for(size_t j=1ul; j < Nm1; j++)
-    {
-        assertion(x[i*N2 + j*N + Nm1], -static_cast<float>(N2*N));
-        assertion(x[i*N2 + j*N], static_cast<float>(N2*N));
-    }
-    // Edges 
-    for(size_t i=1ul; i < Nm1; i++)
-    {
-        assertion(x[i*N2 + Nm1*N + Nm1], -static_cast<float>(N2*(N2+N)));
-        assertion(x[i*N2 + Nm1*N], -static_cast<float>(N2*(N2-N)));
-        assertion(x[i*N2 + Nm1], static_cast<float>(N2*(N2-N)));
-        assertion(x[i*N2], static_cast<float>(N2*(N2+N)));
-    }
-    for(size_t j=1ul; j < Nm1; j++)
-    {
-        assertion(x[Nm1*N2 + j*N + Nm1], -static_cast<float>(N2*(N3+N)));
-        assertion(x[Nm1*N2 + j*N], -static_cast<float>(N2*(N3-N)));
-        assertion(x[j*N + Nm1], static_cast<float>(N2*(N3-N)));
-        assertion(x[j*N], static_cast<float>(N2*(N3+N)));
-    }
-    for(size_t k=1ul; k < Nm1; k++)
-    {
-        assertion(x[Nm1*N2 + Nm1*N + k], -static_cast<float>(N2*(N3+N2)));
-        assertion(x[Nm1*N2 + k], -static_cast<float>(N2*(N3-N2)));
-        assertion(x[Nm1*N + k], static_cast<float>(N2*(N3-N2)));
-        assertion(x[k], static_cast<float>(N2*(N3+N2)));
-    }
-    // Corners
-    assertion(x[Nm1*N2 + Nm1*N + Nm1], -static_cast<float>(N2*(N3+N2+N)));
-    assertion(x[Nm1*N2 + Nm1*N], -static_cast<float>(N2*(N3+N2-N)));
-    assertion(x[Nm1*N2 + Nm1], -static_cast<float>(N2*(N3-N2+N)));
-    assertion(x[Nm1*N2], -static_cast<float>(N2*(N3-N2-N)));
-    assertion(x[Nm1*N + Nm1], static_cast<float>(N2*(N3-N2-N)));
-    assertion(x[Nm1*N], static_cast<float>(N2*(N3-N2+N)));
-    assertion(x[Nm1], static_cast<float>(N2*(N3+N2-N)));
-    assertion(x[0], static_cast<float>(N2*(N3+N2+N)));
-}
-void Native::check_exterior(const float* x, const size_t N)
-{
-    printf("Check exterior\n");
-    const size_t Nm1 = N - 1ul;
-    const size_t N2 = N*N;
-    const size_t N3 = N2*N;
-    // Faces
-    for(size_t i=1ul; i < Nm1; i++)
-    for(size_t k=1ul; k < Nm1; k++)
-    {
-        assertion(x[i*N2 + Nm1*N + k], -static_cast<float>(N2*N2));
-        assertion(x[i*N2 + k], static_cast<float>(N2*N2));
-    }
-    for(size_t j=1ul; j < Nm1; j++)
-    for(size_t k=1ul; k < Nm1; k++)
-    {
-        assertion(x[Nm1*N2 + j*N + k], -static_cast<float>(N2*N3));
-        assertion(x[j*N + k], static_cast<float>(N2*N3));
-    }
-    for(size_t i=1ul; i < Nm1; i++)
-    for(size_t j=1ul; j < Nm1; j++)
-    {
-        assertion(x[i*N2 + j*N + Nm1], -static_cast<float>(N2*N));
-        assertion(x[i*N2 + j*N], static_cast<float>(N2*N));
-    }
-    // Edges 
-    for(size_t i=1ul; i < Nm1; i++)
-    {
-        assertion(x[i*N2 + Nm1*N + Nm1], -static_cast<float>(N2*(N2+N)));
-        assertion(x[i*N2 + Nm1*N], -static_cast<float>(N2*(N2-N)));
-        assertion(x[i*N2 + Nm1], static_cast<float>(N2*(N2-N)));
-        assertion(x[i*N2], static_cast<float>(N2*(N2+N)));
-    }
-    for(size_t j=1ul; j < Nm1; j++)
-    {
-        assertion(x[Nm1*N2 + j*N + Nm1], -static_cast<float>(N2*(N3+N)));
-        assertion(x[Nm1*N2 + j*N], -static_cast<float>(N2*(N3-N)));
-        assertion(x[j*N + Nm1], static_cast<float>(N2*(N3-N)));
-        assertion(x[j*N], static_cast<float>(N2*(N3+N)));
-    }
-    for(size_t k=1ul; k < Nm1; k++)
-    {
-        assertion(x[Nm1*N2 + Nm1*N + k], -static_cast<float>(N2*(N3+N2)));
-        assertion(x[Nm1*N2 + k], -static_cast<float>(N2*(N3-N2)));
-        assertion(x[Nm1*N + k], static_cast<float>(N2*(N3-N2)));
-        assertion(x[k], static_cast<float>(N2*(N3+N2)));
-    }
-    // Corners
-    assertion(x[Nm1*N2 + Nm1*N + Nm1], -static_cast<float>(N2*(N3+N2+N)));
-    assertion(x[Nm1*N2 + Nm1*N], -static_cast<float>(N2*(N3+N2-N)));
-    assertion(x[Nm1*N2 + Nm1], -static_cast<float>(N2*(N3-N2+N)));
-    assertion(x[Nm1*N2], -static_cast<float>(N2*(N3-N2-N)));
-    assertion(x[Nm1*N + Nm1], static_cast<float>(N2*(N3-N2-N)));
-    assertion(x[Nm1*N], static_cast<float>(N2*(N3-N2+N)));
-    assertion(x[Nm1], static_cast<float>(N2*(N3+N2-N)));
-    assertion(x[0], static_cast<float>(N2*(N3+N2+N)));
-}
-void Native::modulo_1d_flat(std::vector<float>& out, const std::vector<float>& x, size_t N) 
+void Laplacian::modulo_1d_flat(std::vector<float>& out, const std::vector<float>& x, size_t N) 
 {
     const size_t N2 = N*N;
     const size_t N3 = N2*N;
@@ -401,7 +185,7 @@ void Native::modulo_1d_flat(std::vector<float>& out, const std::vector<float>& x
                         - 6.f * x[idx]) * invh2;
     }
 }
-void Native::modulo_1d_flat_simd(std::vector<float>& out, const std::vector<float>& x, size_t N) 
+void Laplacian::modulo_1d_flat_simd(std::vector<float>& out, const std::vector<float>& x, size_t N) 
 {
     const size_t N2 = N*N;
     const size_t N3 = N2*N;
@@ -424,7 +208,7 @@ void Native::modulo_1d_flat_simd(std::vector<float>& out, const std::vector<floa
     }
 }
 
-void Native::modulo_3d_nested (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
+void Laplacian::modulo_3d_nested (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
 {
     const float invh2 = N*N;
     #pragma omp parallel for
@@ -447,7 +231,7 @@ void Native::modulo_3d_nested (std::vector<std::vector<std::vector<float>>>& out
         }
     }
 }
-void Native::modulo_3d_nested_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
+void Laplacian::modulo_3d_nested_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
 {
     const float invh2 = N*N;
     #pragma omp parallel for
@@ -471,7 +255,7 @@ void Native::modulo_3d_nested_simd (std::vector<std::vector<std::vector<float>>>
         }
     }
 }
-void Native::conditional_add_3d_nested (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
+void Laplacian::conditional_add_3d_nested (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
 {
     const float invh2 = N*N;
     const size_t Nm1 = N - 1ul;
@@ -495,7 +279,7 @@ void Native::conditional_add_3d_nested (std::vector<std::vector<std::vector<floa
         }
     }
 }
-void Native::conditional_add_3d_nested_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
+void Laplacian::conditional_add_3d_nested_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
 {
     const float invh2 = N*N;
     const size_t Nm1 = N - 1ul;
@@ -520,7 +304,7 @@ void Native::conditional_add_3d_nested_simd (std::vector<std::vector<std::vector
         }
     }
 }
-void Native::ternary_3d_nested (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
+void Laplacian::ternary_3d_nested (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
 {
     const float invh2 = N*N;
     const size_t Nm1 = N - 1ul;
@@ -544,7 +328,7 @@ void Native::ternary_3d_nested (std::vector<std::vector<std::vector<float>>>& ou
         }
     }
 }
-void Native::ternary_3d_nested_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
+void Laplacian::ternary_3d_nested_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
 {
     const float invh2 = N*N;
     const size_t Nm1 = N - 1ul;
@@ -570,7 +354,7 @@ void Native::ternary_3d_nested_simd (std::vector<std::vector<std::vector<float>>
     }
 }
 
-void Native::interior_3d_flat(std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, size_t N) 
+void Laplacian::interior_3d_flat(std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, size_t N) 
 {
     const size_t Ni = N-2ul;
     const size_t N2i = Ni*Ni;
@@ -589,7 +373,7 @@ void Native::interior_3d_flat(std::vector<std::vector<std::vector<float>>>& out,
                         - 6.f * x[i][j][k]) * invh2;
     }
 }
-void Native::interior_3d_flat_simd(std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, size_t N) 
+void Laplacian::interior_3d_flat_simd(std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, size_t N) 
 {
     const size_t Ni = N-2ul;
     const size_t N2i = Ni*Ni;
@@ -608,7 +392,7 @@ void Native::interior_3d_flat_simd(std::vector<std::vector<std::vector<float>>>&
                         - 6.f * x[i][j][k]) * invh2;
     }
 }
-void Native::interior_3d_nested (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
+void Laplacian::interior_3d_nested (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
 {
     const float invh2 = N*N;
     const size_t Nm1 = N-1ul;
@@ -623,7 +407,7 @@ void Native::interior_3d_nested (std::vector<std::vector<std::vector<float>>>& o
     }
 }
 
-void Native::interior_3d_nested_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
+void Laplacian::interior_3d_nested_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x, const size_t N)
 {
     const float invh2 = N*N;
     const size_t Nm1 = N-1ul;
@@ -639,7 +423,7 @@ void Native::interior_3d_nested_simd (std::vector<std::vector<std::vector<float>
     }
 }
 template<size_t N>
-void Native::interior_3d_nested_constexpr (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x)
+void Laplacian::interior_3d_nested_constexpr (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x)
 {
     constexpr float invh2 = N*N;
     constexpr size_t Nm1 = N-1ul;
@@ -654,7 +438,7 @@ void Native::interior_3d_nested_constexpr (std::vector<std::vector<std::vector<f
     }
 }
 template<size_t N>
-void Native::interior_3d_nested_constexpr_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x)
+void Laplacian::interior_3d_nested_constexpr_simd (std::vector<std::vector<std::vector<float>>>& out, const std::vector<std::vector<std::vector<float>>>& x)
 {
     constexpr float invh2 = N*N;
     constexpr size_t Nm1 = N-1ul;
@@ -670,7 +454,7 @@ void Native::interior_3d_nested_constexpr_simd (std::vector<std::vector<std::vec
     }
 }
 
-void Native::interior_1d_flat(std::vector<float>& out, const std::vector<float>& x, size_t N) 
+void Laplacian::interior_1d_flat(std::vector<float>& out, const std::vector<float>& x, size_t N) 
 {
     const size_t Ni = N-2ul;
     const size_t N2i = Ni*Ni;
@@ -689,7 +473,7 @@ void Native::interior_1d_flat(std::vector<float>& out, const std::vector<float>&
                     - 6.f * x[idx2]) * invh2;
     }
 }
-void Native::interior_1d_flat_simd(std::vector<float>& out, const std::vector<float>& x, size_t N) 
+void Laplacian::interior_1d_flat_simd(std::vector<float>& out, const std::vector<float>& x, size_t N) 
 {
     const size_t Ni = N-2ul;
     const size_t N2i = Ni*Ni;
@@ -709,7 +493,7 @@ void Native::interior_1d_flat_simd(std::vector<float>& out, const std::vector<fl
     }
 }
 
-void Native::interior_1d_nested(std::vector<float>& out, const std::vector<float>& x, size_t N) 
+void Laplacian::interior_1d_nested(std::vector<float>& out, const std::vector<float>& x, size_t N) 
 {
     const size_t N2 = N*N;
     const size_t Nm1 = N-1ul;
@@ -725,7 +509,7 @@ void Native::interior_1d_nested(std::vector<float>& out, const std::vector<float
                     - 6.f * x[idx]) * invh2;
     }
 }
-void Native::interior_1d_nested_simd(std::vector<float>& out, const std::vector<float>& x, size_t N) 
+void Laplacian::interior_1d_nested_simd(std::vector<float>& out, const std::vector<float>& x, size_t N) 
 {
     const size_t N2 = N*N;
     const size_t Nm1 = N-1ul;
@@ -743,7 +527,7 @@ void Native::interior_1d_nested_simd(std::vector<float>& out, const std::vector<
     }
 }
 
-void Native::interior_1d_malloc_nested(float* out, const float* x, size_t N) 
+void Laplacian::interior_1d_malloc_nested(float* out, const float* x, size_t N) 
 {
     const size_t N2 = N*N;
     const size_t Nm1 = N-1u;
@@ -760,7 +544,7 @@ void Native::interior_1d_malloc_nested(float* out, const float* x, size_t N)
     }
 }
 
-void Native::interior_1d_malloc_nested_simd(float* out, const float* x, size_t N) 
+void Laplacian::interior_1d_malloc_nested_simd(float* out, const float* x, size_t N) 
 {
     const size_t N2 = N*N;
     const size_t Nm1 = N-1ul;
@@ -777,7 +561,7 @@ void Native::interior_1d_malloc_nested_simd(float* out, const float* x, size_t N
                     - 6.f * x[idx]) * invh2;
     }
 }
-void Native::interior_1d_malloc_nested_i32_max32_idx64(float* out, const float* x, const size_t N) 
+void Laplacian::interior_1d_malloc_nested_i32_max32_idx64(float* out, const float* x, const size_t N) 
 {
     // Use uint32_t for i,j,k. uint64_t otherwise
     const uint32_t N1 = N;
@@ -795,7 +579,7 @@ void Native::interior_1d_malloc_nested_i32_max32_idx64(float* out, const float* 
                     - 6.f * x[idx]) * invh2;
     }
 }
-void Native::interior_1d_malloc_nested_i32_max32_idx64_simd(float* out, const float* x, const size_t N) 
+void Laplacian::interior_1d_malloc_nested_i32_max32_idx64_simd(float* out, const float* x, const size_t N) 
 {
     const uint32_t N1 = N;
     const uint32_t Nm1 = N-1ul;
@@ -813,7 +597,7 @@ void Native::interior_1d_malloc_nested_i32_max32_idx64_simd(float* out, const fl
                     - 6.f * x[idx]) * invh2;
     }
 }
-void Native::interior_1d_malloc_nested_i32_max32_idx64promotion(float* out, const float* x, const size_t N) 
+void Laplacian::interior_1d_malloc_nested_i32_max32_idx64promotion(float* out, const float* x, const size_t N) 
 {
     // Use uint32_t for i,j,k. uint64_t otherwise
     const uint32_t Nm1 = N-1ul;
@@ -831,7 +615,7 @@ void Native::interior_1d_malloc_nested_i32_max32_idx64promotion(float* out, cons
     }
 }
 
-void Native::interior_1d_malloc_nested_i32_max32_idx64promotion_simd(float* out, const float* x, const size_t N) 
+void Laplacian::interior_1d_malloc_nested_i32_max32_idx64promotion_simd(float* out, const float* x, const size_t N) 
 {
     const uint32_t Nm1 = N-1ul;
     const uint32_t N2 = N*N;
@@ -848,7 +632,7 @@ void Native::interior_1d_malloc_nested_i32_max32_idx64promotion_simd(float* out,
                     - 6.f * x[idx]) * invh2;
     }
 }
-void Native::interior_1d_malloc_nested_i32_max32_idx32(float* out, const float* x, const size_t N) 
+void Laplacian::interior_1d_malloc_nested_i32_max32_idx32(float* out, const float* x, const size_t N) 
 {
     // Use uint32_t for all integers
     // The final result is slow. Probably due to the adressing which should be 64bits in a 64bits system
@@ -867,7 +651,7 @@ void Native::interior_1d_malloc_nested_i32_max32_idx32(float* out, const float* 
                     - 6.f * x[idx]) * invh2;
     }
 }
-void Native::interior_1d_malloc_nested_i32_max32_idx32_simd(float* out, const float* x, const size_t N) 
+void Laplacian::interior_1d_malloc_nested_i32_max32_idx32_simd(float* out, const float* x, const size_t N) 
 {
     // Use uint32_t for all integers
     // The final result is slow. Probably due to the adressing which should be 64bits in a 64bits system
@@ -887,7 +671,7 @@ void Native::interior_1d_malloc_nested_i32_max32_idx32_simd(float* out, const fl
                     - 6.f * x[idx]) * invh2;
     }
 }
-void Native::interior_1d_malloc_nested_i32_max64_idx64(float* out, const float* x, const size_t N) 
+void Laplacian::interior_1d_malloc_nested_i32_max64_idx64(float* out, const float* x, const size_t N) 
 {
     // Use uint32_t for i,j,k. uint64_t otherwise
     // Problem in the for loop since Nm1 can be more than the max of uint32_t.
@@ -906,7 +690,7 @@ void Native::interior_1d_malloc_nested_i32_max64_idx64(float* out, const float* 
                     - 6.f * x[idx]) * invh2;
     }
 }
-void Native::interior_1d_malloc_nested_i32_max64_idx64_simd(float* out, const float* x, const size_t N) 
+void Laplacian::interior_1d_malloc_nested_i32_max64_idx64_simd(float* out, const float* x, const size_t N) 
 {
     // Use uint32_t for i,j,k. uint64_t otherwise
     // Problem in the for loop since Nm1 can be more than the max of uint32_t.
@@ -926,7 +710,7 @@ void Native::interior_1d_malloc_nested_i32_max64_idx64_simd(float* out, const fl
                     - 6.f * x[idx]) * invh2;
     }
 }
-void Native::interior_1d_malloc_nested_i32_max64_idx32(float* out, const float* x, const size_t N) 
+void Laplacian::interior_1d_malloc_nested_i32_max64_idx32(float* out, const float* x, const size_t N) 
 {
     // Use uint32_t for i,j,k. uint64_t otherwise
     // Problem in the for loop since Nm1 can be more than the max of uint32_t.
@@ -945,7 +729,7 @@ void Native::interior_1d_malloc_nested_i32_max64_idx32(float* out, const float* 
                     - 6.f * x[idx]) * invh2;
     }
 }
-void Native::interior_1d_malloc_nested_i32_max64_idx32_simd(float* out, const float* x, const size_t N) 
+void Laplacian::interior_1d_malloc_nested_i32_max64_idx32_simd(float* out, const float* x, const size_t N) 
 {
     // Use uint32_t for i,j,k. uint64_t otherwise
     // Problem in the for loop since Nm1 can be more than the max of uint32_t.
@@ -966,7 +750,7 @@ void Native::interior_1d_malloc_nested_i32_max64_idx32_simd(float* out, const fl
     }
 }
 template<size_t N>
-void Native::interior_1d_malloc_nested_constexpr(float* out, const float* x) 
+void Laplacian::interior_1d_malloc_nested_constexpr(float* out, const float* x) 
 {
     constexpr size_t N2 = N*N;
     constexpr size_t Nm1 = N-1ul;
@@ -984,7 +768,7 @@ void Native::interior_1d_malloc_nested_constexpr(float* out, const float* x)
 }
 
 template<size_t N>
-void Native::interior_1d_malloc_nested_constexpr_simd(float* out, const float* x) 
+void Laplacian::interior_1d_malloc_nested_constexpr_simd(float* out, const float* x) 
 {
     constexpr size_t N2 = N*N;
     constexpr size_t Nm1 = N-1ul;
@@ -1008,7 +792,7 @@ inline size_t idx_ij(size_t i, size_t j, size_t N) {
 }
 
 // The optimized 3D interior loop
-void Native::interior_1d_aligned_nested(float* out, const float* x, size_t N) {
+void Laplacian::interior_1d_aligned_nested(float* out, const float* x, size_t N) {
     const float invh2 = static_cast<float>(N * N);
     const size_t Nm1 = N - 1;
 
