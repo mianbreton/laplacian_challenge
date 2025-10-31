@@ -69,7 +69,7 @@ jobs:
           cd build/cuda
           cmake ../../  \
             -DKokkos_ENABLE_CUDA=ON \
-            -Kokkos_ARCH=AMPERE80 \
+            -DKokkos_ARCH=AMPERE80 \
             -DKokkos_ENABLE_OPENMP=ON \
             -DENABLE_UNIT_TESTING=ON
           make -j $NCPU
