@@ -2,6 +2,8 @@ name: Python CPU Tests
 
 on:
   push:
+    paths:
+      - 'python/**'
   pull_request:
 
 jobs:

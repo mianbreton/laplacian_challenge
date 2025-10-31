@@ -2,6 +2,8 @@ name: C++ Build & Test
 
 on:
   push:
+    paths:
+      - 'cpp/**'
   pull_request:
 
 jobs:
