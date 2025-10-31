@@ -54,9 +54,9 @@ jobs:
       - name: Install CUDA toolkit
         uses: Jimver/cuda-toolkit@v0.2.17
         with:
-          cuda: "12.2.0"
-          cache: false
-          sub-packages: "cuda-toolkit"   # Skip samples
+          sub-packages: '["cuda-toolkit"]'
+          use-github-cache: false
+          use-local-cache: false
 
       - name: Verify CUDA installation
         run: nvcc --version
