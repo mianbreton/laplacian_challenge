@@ -56,6 +56,7 @@ jobs:
         with:
             cuda: '12.5.0'
             method: "network"
+            sub-packages: '["cuda-toolkit", "nvcc"]'
             use-github-cache: false
             use-local-cache: false
 
