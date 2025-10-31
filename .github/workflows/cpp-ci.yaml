@@ -34,7 +34,7 @@ jobs:
         run: |
           cd cpp/build/openmp
           ctest --output-on-failure
-          
+
     # --- GPU / CUDA build (compile-only) ---
   build-cuda:
     runs-on: ubuntu-22.04
@@ -55,6 +55,11 @@ jobs:
         uses: Jimver/cuda-toolkit@v0.2.17
         with:
           cuda: "12.2.0"
+          cache: false
+          sub-packages: "cuda-toolkit"   # Skip samples
+
+      - name: Verify CUDA installation
+        run: nvcc --version
 
       - name: Build CUDA (Kokkos)
         run: |
