@@ -23,6 +23,7 @@ jobs:
       # Install dependencies
       - name: Install dependencies
         run: |
+          cd python
           python -m pip install --upgrade pip
           python -m pip install -e .
           pip install pytest
