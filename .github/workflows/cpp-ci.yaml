@@ -56,7 +56,6 @@ jobs:
         with:
             cuda: '12.5.0'
             method: "network"
-            sub-packages: '["cuda-toolkit", "nvcc"]'
             use-github-cache: false
             use-local-cache: false
 
@@ -68,5 +67,5 @@ jobs:
           cd cpp
           mkdir -p build/cuda
           cd build/cuda
-          cmake ../../ -DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_OPENMP=ON -DENABLE_UNIT_TESTING=ON
+          cmake ../../ -DKokkos_ENABLE_CUDA=ON Kokkos_ARCH_AMPERE80=ON -DKokkos_ENABLE_OPENMP=ON -DENABLE_UNIT_TESTING=ON
           make -j $NCPU
