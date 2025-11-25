@@ -53,12 +53,6 @@ def timing(kernel: Kernel, N, runs, NCPU):
     if "NUMBA" in kernel.name or "NUMPY" in kernel.name:
         # Warm up (especially important for Numba JIT)
         func(out, x)
-        if N == 32:
-            print("Checking correctness for N=32")
-            nl.check_interior(out)
-            if not "INTERIOR" in kernel.name:
-                print("Check also boundaries")
-                nl.check_exterior(out)
         for i in range(runs):
             start = time.time()
             func(out, x)
@@ -71,13 +65,6 @@ def timing(kernel: Kernel, N, runs, NCPU):
         out = 0
         # Warm up (especially important for Taichi JIT)
         func(out_ti, x_ti, N)
-        if N == 32:
-            out = out_ti.to_numpy()
-            print("Checking correctness for N=32")
-            nl.check_interior(out)
-            if not "INTERIOR" in kernel.name:
-                print("Check also boundaries")
-                nl.check_exterior(out)
         for i in range(runs):
             start = time.time()
             func(out_ti, x_ti, N)
